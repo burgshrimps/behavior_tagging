@@ -186,13 +186,18 @@ function create_gui
         B = B(:,2:end); % remove first column to remove initialization zeros
         T = T(:,2:end);
         
-        dlmwrite('behavior_phases.txt', B);
-        dlmwrite('behavior_timepoints.txt', T);
-        disp(length(B(1,:)))
-        disp(B)
+        
+        fidB = fopen(strcat(pathname, '/', filename(12:24), '_behavior_phases_TS'),'w');
+        fprintf(fidB, '%7s %10s %10s\n', 'Phase', 'Start', 'Stop');
+        fprintf(fidB, '%7d %10d %10d\n', B);
+        
+        fidT = fopen(strcat(pathname, '/', filename(12:24), '_stim_decision_TS'),'w');
+        fprintf(fidT, '%10s %10s\n', 'Marker', 'Timestamp');
+        fprintf(fidT, '%10d %10d\n', T);
         
         B_colors = ['r', 'b', 'y', 'c']; % color vector for plot, each behavior category gets own color
         hold off; % close any plots that might be open
+        ffig = figure;
         hold on;
         for i = 1:length(B(1,:))
             % stop index of phase is -1 per default and stays -1 in cases 
@@ -225,7 +230,7 @@ function create_gui
         end
         hold off;
         
-        saveas(gcf,'behavior_plot.fig')
+        savefig(ffig, strcat(pathname, '/', filename(12:24), '_behavior_phases.fig'));
     end
 
     function timeIt()
